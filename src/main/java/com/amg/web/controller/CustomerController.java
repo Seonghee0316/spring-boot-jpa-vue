@@ -32,6 +32,7 @@ public class CustomerController {
     public HashMap<String,Object> join(@RequestBody CustomerDTO param){
         System.out.println("-------post mapping-------");
         System.out.println("id" + param.getCustomerId());
+        
         System.out.println("pw" + param.getPassword());
         System.out.println("name" + param.getCustomerName());
         HashMap<String, Object> map = new HashMap<>();
