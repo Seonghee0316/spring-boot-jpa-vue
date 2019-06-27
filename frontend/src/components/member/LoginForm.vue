@@ -25,6 +25,7 @@
 <script>
 import Nav from "@/components/common/Nav.vue";
 import Footer from "@/components/common/Footer.vue";
+import axios from 'axios'
 
 export default {
   components: {
@@ -40,8 +41,16 @@ export default {
   },
 
   methods: {
-    info() {
-      alert('email: ' + this.email + '  / pass: ' + this.pass);
+    info: function() {
+      // alert('email: ' + this.email + '  / pass: ' + this.pass);
+      alert('되는가?...')
+      axios.get('/customers/count')
+      .then(d=>{
+        alert(`SUCCESS : ${d.data}`)
+      })
+      .catch(e=>{
+        alert('ERROR')
+      })
     }
   }
 };

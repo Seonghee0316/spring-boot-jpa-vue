@@ -39,7 +39,7 @@ export default {
     Nav,
     Footer
   },
-  data: () => {
+  data() {
     return {
       current: "",
       previous: null,
