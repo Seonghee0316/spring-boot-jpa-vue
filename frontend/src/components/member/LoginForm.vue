@@ -15,7 +15,10 @@
           <input type="checkbox"> Remember me
         </label>
       </div>
-      <button @click="info" type="submit" class="btn btn-default">Submit</button>
+      <button  class="btn btn-default" @click="get">조 회</button>
+      <button  class="btn btn-default" @click="post">입 력</button>
+      <button  class="btn btn-default" @click="put">수 정</button>
+      <button  class="btn btn-default" @click="del">삭 제</button>
       <!-- <button  @submit="info" type="submit" class="btn btn-default">Submit</button> -->
     </form>
     <Footer></Footer>
@@ -41,17 +44,37 @@ export default {
   },
 
   methods: {
-    info: function() {
-      // alert('email: ' + this.email + '  / pass: ' + this.pass);
-      alert('되는가?...')
-      axios.get('/customers/count')
+    get: () => {
+      axios.get('/customers/hong')
       .then(d=>{
-        alert(`SUCCESS : ${d.data}`)
+        alert(`SUCCESS : ${d.data.customerId}`)
       })
       .catch(e=>{
         alert('ERROR')
       })
+    },
+    post: ()=>{
+      axios.post('/customers')
+      .then(d=>{
+        alert(`POST 연동성공: ${d.data.result}`)
+      })
+    },
+
+    put: ()=>{
+      axios.put('/customers/id')
+      .then(d=>{
+        alert(`PUT 연동성공: ${d.data.result}`)
+      })
+    },
+    
+    del: ()=>{
+      axios.delete('/customers/id')
+      .then(d=>{
+        alert(`DELETE 연동성공: ${d.data.result}`)
+      })
     }
+
+
   }
 };
 

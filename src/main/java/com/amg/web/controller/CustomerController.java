@@ -2,6 +2,7 @@ package com.amg.web.controller;
 
 import java.util.HashMap;
 
+import com.amg.web.common.util.Printer;
 import com.amg.web.domain.CustomerDTO;
 import com.amg.web.service.CustomerService;
 
@@ -25,76 +26,67 @@ public class CustomerController {
     CustomerService customerService;
     @Autowired
     CustomerDTO customer;
+    @Autowired
+    Printer p;
 
     @PostMapping("")
     public HashMap<String, Object> join(@RequestBody CustomerDTO param) {
-        System.out.println("-------post mapping-------");
-        System.out.println("id" + param.getCustomerId());
-
-        System.out.println("pw" + param.getPassword());
-        System.out.println("name" + param.getCustomerName());
+        p.accept("POST 진입");
         HashMap<String, Object> map = new HashMap<>();
         map.put("result", "SUCCESS");
-        customerService.addCustomer(param);
+        return map;
+    }
+
+    @GetMapping("/{customerId}")
+    public CustomerDTO getCustomer(@PathVariable String customerId) {
+        HashMap<String, Object> map = new HashMap<>();
+        p.accept("GET 진입" + customerId);
+        customer.setCustomerId("hong");
+        customer.setPassword("hong");
+        return customer;
+    }
+
+    @PutMapping("/{customerId}")
+    public HashMap<String, Object> updateCustomer(@PathVariable String customerId) {
+        HashMap<String, Object> map = new HashMap<>();
+        p.accept("PUT진입" + customerId);
+        customer.setCustomerId("kim");
+        map.put("result",  "SUCCESS");
+        return map;
+    }
+
+    @DeleteMapping("/{customerId}")
+    public HashMap<String, Object> deleteCustomer(@PathVariable String customerId) {
+        HashMap<String, Object> map = new HashMap<>();
+        p.accept("DELETE진입: "+customerId);
+        customer.setCustomerId(customerId);
+        map.put("result", "탈퇴성공");
         return map;
     }
 
     // 페이지 처리 후 리퀘스트 바디 써야함.
     @GetMapping("/page/{pageNum}")
     public HashMap<String, Object> list(@PathVariable String pageNum) {
-        // 뭘 담아야지 페이지 프록시가 기능 할수있는가?
-        // 컨트롤러가 얘네들은 알려줘야지 프록시가 정보를 갖고 해결해줌.
-        // rowCount, page_num, page_size, block_size
         HashMap<String, Object> map = new HashMap<>();
-        // list는 add 오버로딩이 add map은 put
-        map.put("totalCount", customerService.countAll());
-        map.put("page_num", pageNum);
-        map.put("page_size", "5");
-        map.put("block_size", "5");
+        
+        // map.put("totalCount", customerService.countAll());
+        // map.put("page_num", pageNum);
+        // map.put("page_size", "5");
+        // map.put("block_size", "5");
         return map;
     }
 
     @GetMapping("/count")
     public String count() {
-        System.out.println("CustomerController count() 경로로 들어옴");
-        int count = customerService.countAll();
-        System.out.println("출력한 고객의 총인원 : " + count);
+        // int count = customerService.countAll();
+        p.accept("CustomerController count() 경로로 들어옴");
         return "100";
     }
 
     @GetMapping("/{customerId}/{password}")
     public CustomerDTO login(@PathVariable("customerId") String id, @PathVariable("password") String pass) {
-
         customer.setCustomerId(id);
         customer.setPassword(pass);
         return customerService.login(customer);
-    }
-
-    @GetMapping("/{customerId}")
-    public CustomerDTO getCustomer(@PathVariable String customerId) {
-        System.out.println("ID 검색 진입 : " + customerId);
-        return customerService.findCustomerByCustomerId(customerId);
-    }
-
-    @PutMapping("/{customerId}")
-    public CustomerDTO updateCustomer(@RequestBody CustomerDTO param) {
-        System.out.println("수정 할 객체: " + param.toString());
-        int res = customerService.updateCustomer(param);
-        System.out.println("====> " + res);
-        if (res == 1) {
-            customer = customerService.findCustomerByCustomerId(param.getCustomerId());
-        } else {
-            System.out.println("컨트롤러 수정 실패");
-        }
-        return customer;
-    }
-
-    @DeleteMapping("/{customerId}")
-    public HashMap<String, Object> deleteCustomer(@PathVariable String customerId) {
-        HashMap<String, Object> map = new HashMap<>();
-        customer.setCustomerId(customerId);
-        customerService.deleteCustomer(customer);
-        map.put("result", "탈퇴성공");
-        return map;
     }
 }
